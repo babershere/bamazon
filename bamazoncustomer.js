@@ -17,6 +17,7 @@ and then prevent the order from going through.
 
 var inquirer = require('inquirer');
 var mysql = require('mysql');
+require('console.table');
 var connection = mysql.createConnection({
     host: 'localhost',
     port: '3307',
@@ -32,17 +33,20 @@ connection.connect(function (err) {
 
 var display = function () {
     connection.query("SELECT * FROM products", function (err, res) {
-        inquirer.prompt({
-            name: "items",
-            type: "list",
-            message: "Welcome to Bamazon! Feel free to browser around!",
-            choices: function (value) {
-                var choiceArray = [];
-                for (var i = 0; i < res.length; i++) {
-                    choiceArray.push(res[i].product_name);
-                }
-                return choiceArray;
-            }
-        })
+        console.log("Welcome to Bamazon! Feel free to check out the Items I have for sale Below!")
+        console.table(res);
+        // inquirer.prompt({
+        //     name: "items",
+        //     type: "list",
+        //     message: "Welcome to Bamazon! Feel free to browser around!",
+        //     choices: function (value) {
+        //         var choiceArray = [];
+        //         for (var i = 0; i < res.length; i++) {
+        //             choiceArray.push(res[i].product_name);
+        //         }
+        //         return choiceArray
+                
+        //     }
+        // })
     })
 };
