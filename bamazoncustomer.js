@@ -6,6 +6,7 @@ Include the ids, names, and prices of products for sale.
 
 // The first should ask them the ID of the product they would like to buy.
 // The second message should ask how many units of the product they would like to buy.
+
 // Once the customer has placed the order, your application should check 
 if your store has enough of the product to meet the customer's request.
 // If not, the app should log a phrase like Insufficient quantity! , 
@@ -26,5 +27,22 @@ var connection = mysql.createConnection({
 
 connection.connect(function (err) {
     console.log("Connected as id: " + connection.threadId);
-    // start();
+    display();
 })
+
+var display = function () {
+    connection.query("SELECT * FROM products", function (err, res) {
+        inquirer.prompt({
+            name: "items",
+            type: "list",
+            message: "Welcome to Bamazon! Feel free to browser around!",
+            choices: function (value) {
+                var choiceArray = [];
+                for (var i = 0; i < res.length; i++) {
+                    choiceArray.push(res[i].product_name);
+                }
+                return choiceArray;
+            }
+        })
+    })
+};
