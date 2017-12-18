@@ -1,0 +1,23 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "my sql and node.js amazon like app",
+  "main": "bamazoncustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/babershere/bamazon.git"
+  },
+  "author": "Rey Qureshi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/babershere/bamazon/issues"
+  },
+  "homepage": "https://github.com/babershere/bamazon#readme",
+  "dependencies": {
+    "inquirer": "^4.0.1",
+    "mysql": "^2.15.0"
+  }
+}
