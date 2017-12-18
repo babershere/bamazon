@@ -27,26 +27,52 @@ var connection = mysql.createConnection({
 });
 
 connection.connect(function (err) {
-    console.log("Connected as id: " + connection.threadId);
+    // console.log("Connected as id: " + connection.threadId);
     display();
 })
 
+var itemId = 0;
+var quantity = 0;
 var display = function () {
     connection.query("SELECT * FROM products", function (err, res) {
-        console.log("Welcome to Bamazon! Feel free to check out the Items I have for sale Below!")
+        console.log("Welcome to Bamazon! Feel free to check out the Items we have for sale Below!")
         console.table(res);
-        // inquirer.prompt({
-        //     name: "items",
-        //     type: "list",
-        //     message: "Welcome to Bamazon! Feel free to browser around!",
-        //     choices: function (value) {
-        //         var choiceArray = [];
-        //         for (var i = 0; i < res.length; i++) {
-        //             choiceArray.push(res[i].product_name);
-        //         }
-        //         return choiceArray
-                
-        //     }
-        // })
+
+        inquirer.prompt({
+            name: 'id',
+            message: "Please enter the ID you want to purchase!"
+        }).then(function(input) {
+            itemId = input.id;
+         
+        }).then( function() {
+            inquirer.prompt({
+                name: 'amount',
+                message: 'How many units of ' + res[itemId  -1].product_name + ' do you want to buy?'
+            }).then( function(input) {
+                quantity = input.amount;
+                return;
+            }).then(function checkForQuantity() {
+                if (res[itemId - 1].stock_quantity >= quantity) {
+                    fullfillOrder(res[itemId - 1])
+                } else {
+                    console.log('Sorry this item is back ordered, please check back again soon');
+                }
+                return;
+            });
+        });
+
+        function fullfillOrder(orderItem) {
+            var newQuantity = orderItem.stock_quantity - quantity;
+            connection.query('UPDATE products SET ? WHERE ?', [
+                {
+                    stock_quantity: newQuantity
+                },
+                {
+                    item_id: orderItem.item_id
+                }
+            ], function (err, res) {
+                console.log('You just purchased', quantity, orderItem.product_name, 'for a total of', orderItem.price * quantity, ' Dollars');
+            });
+        }
     })
 };
